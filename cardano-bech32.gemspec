@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative "lib/cardano_bech32/version"
+require_relative "lib/cardano/bech32/version"
 
 Gem::Specification.new do |spec|
   spec.name = "cardano-bech32"
-  spec.version = CardanoBech32::VERSION
+  spec.version = Cardano::Bech32::VERSION
   spec.authors = ["Robin Böning"]
   spec.email = ["robin.boening@gmail.com"]
 

@@ -1,4 +1,4 @@
-# CardanoBech32
+# cardano-bech32
 
 A small, focused Ruby library for encoding and decoding Cardano Bech32 identifiers.
 This gem deliberately avoids higher-level ledger concerns and focuses solely on correct, specification-compliant Bech32 handling.
@@ -43,18 +43,18 @@ tx_id (32 bytes) || index (1 byte)
 #### Encoding
 
 ```ruby
-require "cardano_bech32"
+require "cardano/bech32"
 
 txref = "b2a591ac219ce6dcca5847e0248015209c7cb0436aa6bd6863d0c1f152a60bc5#0"
 
-CardanoBech32::GovAction.encode(txref)
+Cardano::Bech32::GovAction.encode(txref)
 # => "gov_action1k2jertppnnndejjcglszfqq4yzw8evzrd2nt66rr6rqlz54xp0zsq05ecsn"
 ```
 
 #### Decoding
 
 ```ruby
-CardanoBech32::GovAction.decode(
+Cardano::Bech32::GovAction.decode(
   "gov_action1k2jertppnnndejjcglszfqq4yzw8evzrd2nt66rr6rqlz54xp0zsq05ecsn"
 )
 # => {
@@ -71,7 +71,7 @@ Validation checks:
 * Correct payload length (33 bytes)
 
 ```ruby
-CardanoBech32::GovAction.valid?("gov_action1k2jertppnnndejjcglszfqq4yzw8evzrd2nt66rr6rqlz54xp0zsq05ecsn")
+Cardano::Bech32::GovAction.valid?("gov_action1k2jertppnnndejjcglszfqq4yzw8evzrd2nt66rr6rqlz54xp0zsq05ecsn")
 # => true
 ```
 
@@ -86,8 +86,8 @@ explicit, typed errors:
 ```ruby
 # Example
 begin
-  CardanoBech32::GovAction.encode("invalid")
-rescue CardanoBech32::GovAction::Error => e
+  Cardano::Bech32::GovAction.encode("invalid")
+rescue Cardano::Bech32::GovAction::Error => e
   puts e.message
 end
 
@@ -109,4 +109,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the CardanoBech32 project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/cardano_bech32/blob/main/CODE_OF_CONDUCT.md).
+Everyone interacting in the Cardano::Bech32 project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/cardano_bech32/blob/main/CODE_OF_CONDUCT.md).

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe CardanoBech32::GovAction do
+RSpec.describe Cardano::Bech32::GovAction do
   describe ".encode" do
     it "encodes a governance action id from txid#index (CIP-0129 example)" do
       txref = "b2a591ac219ce6dcca5847e0248015209c7cb0436aa6bd6863d0c1f152a60bc5#0"
@@ -13,12 +13,12 @@ RSpec.describe CardanoBech32::GovAction do
       txref = "b2a591ac219ce6dcca5847e0248015209c7cb0436aa6bd6863d0c1f152a60bc5#256"
 
       expect { described_class.encode(txref) }
-        .to raise_error(CardanoBech32::GovAction::InvalidPayload)
+        .to raise_error(Cardano::Bech32::GovAction::InvalidPayload)
     end
 
     it "rejects malformed tx references" do
       expect { described_class.encode("invalid") }
-        .to raise_error(CardanoBech32::GovAction::InvalidFormat)
+        .to raise_error(Cardano::Bech32::GovAction::InvalidFormat)
     end
   end
 
@@ -40,14 +40,14 @@ RSpec.describe CardanoBech32::GovAction do
         "addr1k2jertppnnndejjcglszfqq4yzw8evzrd2nt66rr6rqlz54xp0zsq05ecsn"
 
       expect { described_class.decode(invalid) }
-        .to raise_error(CardanoBech32::GovAction::InvalidFormat)
+        .to raise_error(Cardano::Bech32::GovAction::InvalidFormat)
     end
 
     it "rejects invalid bech32 strings" do
       invalid = "gov_action1invalid"
 
       expect { described_class.decode(invalid) }
-        .to raise_error(CardanoBech32::GovAction::InvalidFormat)
+        .to raise_error(Cardano::Bech32::GovAction::InvalidFormat)
     end
   end
 

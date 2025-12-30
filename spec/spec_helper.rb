@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "cardano_bech32"
+require "cardano/bech32"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
