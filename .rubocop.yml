@@ -7,7 +7,18 @@ Style/StringLiterals:
 Style/StringLiteralsInInterpolation:
   EnforcedStyle: double_quotes
 
+Metrics/MethodLength:
+  Max: 20
+
 Metrics/BlockLength:
   Max: 100
+  Exclude:
+    - 'spec/**/*'
+
+Naming/VariableNumber:
+  Exclude:
+    - 'spec/**/*'
+
+Layout/LineLength:
   Exclude:
     - 'spec/**/*'
