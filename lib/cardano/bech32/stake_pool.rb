@@ -29,8 +29,8 @@ module Cardano
 
         raise InvalidPayload, "invalid pool hash length" unless payload.bytesize == POOL_HASH_LENGTH
 
-        data = ::Bech32.convert_bits(payload.bytes, 8, 5, true)
-        ::Bech32.encode(HRP, data, ::Bech32::Encoding::BECH32)
+        data = Cardano::Bech32.convert_bits(payload.bytes, from_bits: 8, to_bits: 5, pad: true)
+        Cardano::Bech32.encode(HRP, data)
       end
 
       # Decode a Bech32 stake pool id.
@@ -43,7 +43,7 @@ module Cardano
         raise InvalidFormat, "invalid bech32 string" unless hrp && data
         raise InvalidFormat, "invalid stake pool HRP: #{hrp}" unless hrp == HRP
 
-        bytes = ::Bech32.convert_bits(data, 5, 8, false)
+        bytes = Cardano::Bech32.convert_bits(data, from_bits: 5, to_bits: 8, pad: false)
         raise InvalidPayload, "invalid payload" unless bytes
         raise InvalidPayload, "invalid pool hash length" unless bytes.length == POOL_HASH_LENGTH
 

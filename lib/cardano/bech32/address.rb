@@ -74,7 +74,7 @@ module Cardano
         raise InvalidFormat, "invalid bech32 string" if hrp.nil? || data.nil?
 
         # Convert 5-bit array to bytes
-        payload_bytes = ::Bech32.convert_bits(data, 5, 8, true)
+        payload_bytes = Cardano::Bech32.convert_bits(data, from_bits: 5, to_bits: 8, pad: true)
         raise InvalidPayload, "invalid payload length" unless payload_bytes.length.positive?
 
         header = payload_bytes.first

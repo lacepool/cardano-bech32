@@ -28,16 +28,16 @@ module Cardano
         raise InvalidPayload, "index must be 0..255" unless index.between?(0, 255)
 
         payload = txid_bytes + [index].pack("C")
-        data_5bit = ::Bech32.convert_bits(payload.bytes, 8, 5, true)
+        data = Cardano::Bech32.convert_bits(payload.bytes, from_bits: 8, to_bits: 5, pad: true)
 
-        ::Bech32.encode(HRP, data_5bit, ::Bech32::Encoding::BECH32)
+        Cardano::Bech32.encode(HRP, data)
       end
 
       def self.decode(bech32)
         hrp, data = Cardano::Bech32.decode(bech32)
         raise InvalidFormat, "invalid HRP" unless hrp == HRP
 
-        bytes = ::Bech32.convert_bits(data, 5, 8, false)
+        bytes = Cardano::Bech32.convert_bits(data, from_bits: 5, to_bits: 8, pad: false)
         raise InvalidPayload, "invalid payload length" unless bytes.length == TOTAL_BYTES
 
         {
