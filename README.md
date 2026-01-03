@@ -11,7 +11,7 @@ This gem deliberately avoids higher-level ledger concerns and focuses solely on 
   - [x] Enterprise Address
   - [x] Pointer Address
   - [x] Stake Address
-- [ ] Stake Pool IDs
+- [x] Stake Pool IDs
 - [ ] DRep IDs
 
 The API is designed to grow conservatively as additional Cardano Improvement Proposals (CIPs) are implemented.
@@ -48,7 +48,7 @@ tx_id (32 bytes) || index (1 byte)
 
 Encoded as Bech32 with HRP gov_action.
 
-```
+```ruby
 require "cardano/bech32"
 
 txref = "b2a591ac219ce6dcca5847e0248015209c7cb0436aa6bd6863d0c1f152a60bc5#0"
@@ -76,9 +76,26 @@ rescue Cardano::Bech32::GovAction::InvalidFormat,
 end
 ```
 
+### Stake Pool IDs
+
+Stake Pool IDs are Bech32-encoded 28-byte hashes identifying a registered stake pool.
+
+```ruby
+pool_hash = "6e90911fdb579e203f556f3f24aca5b8714be049ccf716008ab849fd"
+Cardano::Bech32::StakePool.encode(pool_hash)
+# => pool1d6gfz87m270zq064duljft99hpc5hczfenm3vqy2hpyl67tteq9
+
+pool_id = "pool1d6gfz87m270zq064duljft99hpc5hczfenm3vqy2hpyl67tteq9"
+Cardano::Bech32::StakePool.decode(pool_id)
+# => { bytes: "\x8C\xB8\...", hex: "6e90911..." }
+
+Cardano::Bech32::StakePool.valid?(pool_id)
+# => true
+```
+
 ### Addresses
 
-```
+```ruby
 # Decode a Cardano Address
 addr_bech32 = "addr1qx2fxv2umyhttkxyxp8x0dlpdt3k6cwng5pxj3jhsydzer3n0d3vllmyqwsx5wktcd8cc3sq835lu7drv2xwl2wywfgse35a3x"
 address = CardanoBech32::Address.decode(addr_bech32)

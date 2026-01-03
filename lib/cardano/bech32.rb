@@ -3,6 +3,7 @@
 require_relative "bech32/version"
 require_relative "bech32/gov_action"
 require_relative "bech32/address"
+require_relative "bech32/stake_pool"
 
 module Cardano
   # Bech32 module for encoding and decoding Cardano Bech32 identifiers.
@@ -25,5 +26,6 @@ module Cardano
 
     class Error < StandardError; end
     class InvalidFormat < Error; end
+    class InvalidPayload < Error; end
   end
 end

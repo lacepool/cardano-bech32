@@ -15,6 +15,9 @@ Metrics/BlockLength:
   Exclude:
     - 'spec/**/*'
 
+Style/BlockDelimiters:
+  EnforcedStyle: braces_for_chaining
+
 Naming/VariableNumber:
   Exclude:
     - 'spec/**/*'
