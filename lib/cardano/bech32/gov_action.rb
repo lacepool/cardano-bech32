@@ -17,10 +17,6 @@ module Cardano
       INDEX_BYTES = 1
       TOTAL_BYTES = TX_ID_BYTES + INDEX_BYTES
 
-      class Error < StandardError; end
-      class InvalidFormat < Error; end
-      class InvalidPayload < Error; end
-
       def self.encode(tx_ref)
         txid_hex, index_str = tx_ref.split("#", 2)
         raise InvalidFormat, "expected txid#index" unless txid_hex && index_str

@@ -8,8 +8,6 @@ module Cardano
   module Bech32
     # Module for Cardano Bech32 addresses
     module Address
-      class InvalidAddress < StandardError; end
-
       module Credential
         KEY    = :key
         SCRIPT = :script
@@ -39,7 +37,7 @@ module Cardano
         high_nibble = high_nibble_from_header(header)
 
         ADDRESS_TYPE_BY_HEADER.fetch(high_nibble) do
-          raise InvalidAddress, "Unknown header type: #{header.to_s(2)}"
+          raise InvalidFormat, "Unknown header type: #{header.to_s(2)}"
         end
       end
 
@@ -73,11 +71,11 @@ module Cardano
 
       def self.decode(bech32)
         hrp, data = Cardano::Bech32.decode(bech32)
-        raise InvalidAddress, "Invalid Bech32 string" if hrp.nil? || data.nil?
+        raise InvalidFormat, "invalid bech32 string" if hrp.nil? || data.nil?
 
         # Convert 5-bit array to bytes
         payload_bytes = ::Bech32.convert_bits(data, 5, 8, true)
-        raise InvalidAddress, "Invalid payload length" unless payload_bytes.length.positive?
+        raise InvalidPayload, "invalid payload length" unless payload_bytes.length.positive?
 
         header = payload_bytes.first
         type = address_type(header)

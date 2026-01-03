@@ -1,10 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "bech32/version"
-require_relative "bech32/gov_action"
-require_relative "bech32/address"
-require_relative "bech32/stake_pool"
-
 module Cardano
   # Bech32 module for encoding and decoding Cardano Bech32 identifiers.
   module Bech32
@@ -21,7 +16,7 @@ module Cardano
       hrp, data, _spec = ::Bech32.decode(bech32, MAX_BECH32_LENGTH)
       [hrp, data]
     rescue StandardError
-      raise InvalidFormat, "invalid bech32 encoding"
+      raise InvalidFormat, "invalid bech32 string"
     end
 
     class Error < StandardError; end
@@ -29,3 +24,8 @@ module Cardano
     class InvalidPayload < Error; end
   end
 end
+
+require_relative "bech32/version"
+require_relative "bech32/gov_action"
+require_relative "bech32/address"
+require_relative "bech32/stake_pool"

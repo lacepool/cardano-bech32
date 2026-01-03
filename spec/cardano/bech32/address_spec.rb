@@ -67,5 +67,11 @@ RSpec.describe Cardano::Bech32::Address do
         end
       end
     end
+
+    it "raises InvalidFormat for invalid bech32 strings" do
+      expect {
+        described_class.decode("not-a-bech32-string")
+      }.to raise_error(Cardano::Bech32::InvalidFormat, /invalid bech32 string/)
+    end
   end
 end
