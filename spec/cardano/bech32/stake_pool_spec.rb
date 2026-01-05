@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Cardano::Bech32::StakePool do
   let(:pool_hash)    { "6e90911fdb579e203f556f3f24aca5b8714be049ccf716008ab849fd" }
   let(:binary_hash)  { [pool_hash].pack("H*") }

@@ -3,16 +3,18 @@
 A small, focused Ruby library for encoding and decoding Cardano Bech32 identifiers.
 This gem deliberately avoids higher-level ledger concerns and focuses solely on **specification-compliant Bech32 handling**.
 
-## Currently supported
+## Supported Identifiers
 
-- [x] Governance Action IDs (`gov_action`) — [CIP-0129](https://cips.cardano.org/cip/CIP-0129)
+- [x] Governance [CIP-0129](https://cips.cardano.org/cip/CIP-0129)
+  - [x] GovAction IDs
+  - [x] DRep IDs
+  - [x] CC hot/cold
 - [x] Addresses
   - [x] Base Address
   - [x] Enterprise Address
   - [x] Pointer Address
   - [x] Stake Address
 - [x] Stake Pool IDs
-- [ ] DRep IDs
 
 The API is designed to grow conservatively as additional Cardano Improvement Proposals (CIPs) are implemented.
 
@@ -38,15 +40,78 @@ gem install cardano-bech32
 
 ## Usage
 
-### Governance Action IDs (CIP-0129)
+### Governance Credentials (CIP-0129)
 
-Governance Action IDs consists of:
+Cardano governance identifiers defined in CIP-0129 are Bech32-encoded binary payloads used throughout on-chain governance.
+
+This library supports all CIP-0129 governance identifiers, including:
+
+* Constitutional Committee credentials (hot & cold)
+* DRep credentials
+* Governance Action IDs
+
+#### Constitutional Committee & DRep Credentials
+
+Governance credentials consist of:
+
+```
+header (1 byte) || credential hash (N bytes)
+```
+
+The header byte is authoritative and encodes:
+* Credential type (CC Hot, CC Cold, DRep)
+* Key type (key hash or script hash)
+
+The HRP is derived from the header and validated during decoding.
+
+Decode a governance credential
+
+```
+require "cardano/bech32"
+
+cred = Cardano::Bech32::GovCredentials.decode(
+  "cc_cold1zvqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq6kflvs"
+)
+
+cred.credential      # => :cc_cold
+cred.hash_bytes      # => [0, 0, 0, ...]
+cred.header_byte     # => 19
+cred.hrp             # => "cc_cold"
+cred.key_type        # => :script
+cred.payload_bytes   # => [19, 0, 0, ...]
+cred.payload_hex     # => "1300000000..."
+```
+
+The returned object is one of:
+* `Cardano::Bech32::GovCredentials::Cc`
+* `Cardano::Bech32::GovCredentials::Drep`
+
+Both inherit from `AbstractCredential` and expose a uniform interface.
+
+Encode a governance credential
+
+```
+payload_hex = "130000000000000000000000000000000000000000000000000000000000"
+
+bech32 = Cardano::Bech32::GovCredentials.encode(payload_hex)
+# => "cc_cold1zvqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq6kflvs"
+```
+
+The encoder:
+* Accepts raw bytes or hex
+* Infers HRP from the header byte
+
+
+#### Governance Action IDs
+
+Governance Action IDs identify a governance action on-chain and consist of:
+
 
 ```
 tx_id (32 bytes) || index (1 byte)
 ```
 
-Encoded as Bech32 with HRP gov_action.
+They are encoded as Bech32 using HRP `gov_action`.
 
 ```ruby
 require "cardano/bech32"
@@ -55,8 +120,11 @@ txref = "b2a591ac219ce6dcca5847e0248015209c7cb0436aa6bd6863d0c1f152a60bc5#0"
 bech32 = Cardano::Bech32::GovAction.encode(txref)
 # => "gov_action1k2jertppnnndejjcglszfqq4yzw8evzrd2nt66rr6rqlz54xp0zsq05ecsn"
 
-decoded = Cardano::Bech32::GovAction.decode(bech32)
-# => { tx_id: "...", index: 0 }
+gov_action = Cardano::Bech32::GovAction.decode(bech32)
+gov_action.tx_id          # => "b2a591ac219ce6dcca5847e0248015209c7cb0436aa6bd6863d0c1f152a60bc5"
+gov_action.index          # => 0
+gov_action.payload_bytes  # => [178, 165, 145, 172, ...]
+gov_action.hrp            # => "gov_action"
 
 Cardano::Bech32::GovAction.valid?(bech32)
 # => true
@@ -75,6 +143,8 @@ rescue Cardano::Bech32::GovAction::InvalidFormat,
   puts e.message
 end
 ```
+
+
 
 ### Stake Pool IDs
 

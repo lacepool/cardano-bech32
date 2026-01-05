@@ -1,38 +1,35 @@
 # frozen_string_literal: true
 
-RSpec.describe Cardano::Bech32::GovAction do
+RSpec.describe Cardano::Bech32::GovCredentials::GovAction do
   describe ".encode" do
     it "encodes a governance action id from txid#index (CIP-0129 example)" do
-      txref = "b2a591ac219ce6dcca5847e0248015209c7cb0436aa6bd6863d0c1f152a60bc5#0"
+      txref = GovCredentialFixtures::GOV_ACTION[:txref]
 
       expect(described_class.encode(txref))
-        .to eq("gov_action1k2jertppnnndejjcglszfqq4yzw8evzrd2nt66rr6rqlz54xp0zsq05ecsn")
+        .to eq(GovCredentialFixtures::GOV_ACTION[:bech32])
     end
 
     it "rejects indexes outside uint8 range" do
-      txref = "b2a591ac219ce6dcca5847e0248015209c7cb0436aa6bd6863d0c1f152a60bc5#256"
+      txref = "#{GovCredentialFixtures::GOV_ACTION[:tx_id]}#256"
 
       expect { described_class.encode(txref) }
         .to raise_error(Cardano::Bech32::InvalidPayload)
     end
 
     it "rejects malformed tx references" do
-      expect { described_class.encode("invalid") }
+      txref = "invalid-txref-format"
+
+      expect { described_class.encode(txref) }
         .to raise_error(Cardano::Bech32::InvalidFormat)
     end
   end
 
   describe ".decode" do
     it "decodes a governance action id into tx_id and index" do
-      bech32 =
-        "gov_action1k2jertppnnndejjcglszfqq4yzw8evzrd2nt66rr6rqlz54xp0zsq05ecsn"
+      result = described_class.decode(GovCredentialFixtures::GOV_ACTION[:bech32])
 
-      expect(described_class.decode(bech32)).to eq(
-        {
-          tx_id: "b2a591ac219ce6dcca5847e0248015209c7cb0436aa6bd6863d0c1f152a60bc5",
-          index: 0
-        }
-      )
+      expect(result.tx_id).to eq(GovCredentialFixtures::GOV_ACTION[:tx_id])
+      expect(result.index).to eq(GovCredentialFixtures::GOV_ACTION[:index])
     end
 
     it "rejects invalid HRP" do
@@ -54,7 +51,7 @@ RSpec.describe Cardano::Bech32::GovAction do
   describe ".valid?" do
     it "returns true for valid governance action ids" do
       bech32 =
-        "gov_action1k2jertppnnndejjcglszfqq4yzw8evzrd2nt66rr6rqlz54xp0zsq05ecsn"
+        GovCredentialFixtures::GOV_ACTION[:bech32]
 
       expect(described_class.valid?(bech32)).to be(true)
     end

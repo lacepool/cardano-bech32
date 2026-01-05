@@ -45,6 +45,6 @@ module Cardano
 end
 
 require_relative "bech32/version"
-require_relative "bech32/gov_action"
 require_relative "bech32/address"
 require_relative "bech32/stake_pool"
+require_relative "bech32/gov_credentials"
